@@ -1,0 +1,46 @@
+program coulombfield_2d
+    implicit none
+    real, parameter  :: pi = 3.141593
+    real :: q, xc=0,yc=0, xe=0, ye=0, r, cosA, cosB
+    real :: mag, xcom, ycom, mu = 1.0
+    integer :: i,j
+
+    open (1,file = 'c0ulombfield_2d.dat', status = 'replace')
+
+
+    write (*,*) "Enter amount of charge (in C)="
+    read (*,*) q
+    write (*,*) "Enter position of the charge x="
+    read (*,*) xc
+    write (*,*) "Enter position of the charge y="
+    read (*,*) yc
+
+    print *, "the amount of source charge = ", q
+    print *, "the position of the source charge ", xc,yc,0
+
+    do i = -5 , 5
+        xe = i
+        do j = -5 ,5
+         ye=j
+
+         r=sqrt((xe-xc)**2 + (ye-yc)**2 )
+
+         if (r == 0)then
+         mag = 0
+         else
+         mag = q/(4*pi*mu*r**2)
+         cosA = (xe-xc)/r
+         cosB = (ye-yc)/r
+         xcom = mag*cosA
+         ycom = mag*cosB
+         end if
+
+         print *,   xe,ye,0,xcom,ycom,0
+         write(1,*) xe,ye,0,xcom,ycom,0
+        end do
+
+    end do
+
+end program
+
+
