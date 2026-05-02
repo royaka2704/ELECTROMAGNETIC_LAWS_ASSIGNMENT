@@ -1,0 +1,54 @@
+program coulombfield_3d
+    implicit none
+    real, parameter  :: pi = 3.141593
+    real :: q, xc=0,yc=0,zc=0, xe=0, ye=0,ze=0, r, cosA, cosB, cosC
+    real :: mag, xcom, ycom, zcom, mu = 1.0
+    integer :: i,j,k
+
+    open (1,file = 'culombfield_3d.dat', status = 'replace')
+
+
+    write (*,*) "Enter amount of charge (in C)="
+    read (*,*) q
+    write (*,*) "Enter position of the charge x="
+    read (*,*) xc
+    write (*,*) "Enter position of the charge y="
+    read (*,*) yc
+    write (*,*) "Enter position of the charge z="
+    read (*,*) zc
+
+
+    print *, "the amount of source charge = ", q
+    print *, "the position of the source charge ", xc,yc,zc
+
+    do i = -5, 5
+        xe = i
+        do j = -5, 5
+           ye = j
+           do k = -5, 5
+             ze = k
+             r=sqrt((xe-xc)**2 + (ye-yc)**2 + (ze-zc)**2 )
+
+             if (r == 0)then
+             mag = 0
+             else
+             mag = q/(4*pi*mu*r**2)
+             cosA = (xe-xc)/r
+             cosB = (ye-yc)/r
+             cosC = (ze-zc)/r
+             xcom = mag*cosA
+             ycom = mag*cosB
+             zcom = mag*cosC
+             end if
+
+            print *,   xe,ye,ze,xcom,ycom,zcom
+            write(1,*) xe,ye,ze,xcom,ycom,zcom
+
+          end do
+        end do
+    end do
+
+end program
+
+
+
