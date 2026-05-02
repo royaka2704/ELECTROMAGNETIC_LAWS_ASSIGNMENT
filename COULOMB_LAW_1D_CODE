@@ -1,0 +1,17 @@
+program culomblawgraph
+    real :: q1,q2,r,k,force,h
+    q1=1
+    q2=1
+    r=0
+    k=.001
+    force = 0
+    n=1
+    h=.1
+    open(1,file='culombgraph.dat',status='replace')
+    do i= 1 , 20
+        r=r+h
+        force=(k*q1*q2)/r**2
+        print *, r,force
+        write(1,*) r,force
+    end do
+end program
