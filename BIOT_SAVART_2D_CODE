@@ -1,0 +1,65 @@
+program biot_savart_2d
+    implicit none
+
+    real ::  current=100, L1=-2 ,L2=2, dl=0,r=0
+    integer :: p,n=100
+    real :: mu =1, pi = 3.141
+    real :: C, cosA,cosB,cosC
+    real :: rcapi, rcapj, rcapk
+    real :: dl_X_rcapi=0, dl_X_rcapj=0 ,dl_X_rcapk=0
+    real :: dli=0,dlj=0,dlk=0
+    real :: i=1, j=1, k=1
+    real :: x0 = 0, y0 = 0, z0 = 0, x1 = 0, y1 = 0, minus_y1 =0, z1 = 0
+
+    ! fILD = integration of (mu / (4 * pi))* I * ( dl X r_cap)/r^2 in the range of  to L1 to L2
+    ! C = (mu/(4*pi))*I/r**2
+
+    x0=0
+    y0=0
+    z0=L1
+
+    dl= (L2 - L1)/n
+    dli=0
+    dlj=0
+    dlk=dl
+    open(1, file = 'amperelaw.dat', status='replace')
+
+
+        do p=-10,10
+            x1=p
+            y1=sqrt(100 - x1**2)
+            minus_y1 = -y1
+            z1=0
+            do while(z0<L2)
+                z0=z0 + dl/2
+                r = sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
+                C = ((mu/(4*pi))* current)/r**2
+
+                cosA = (x1-x0)/r
+                cosB = (y1-y0)/r
+                cosC = (z1-z0)/r
+
+                rcapi = i*cosA
+                rcapj = j*cosB
+                rcapk = k*cosC
+
+                dl_X_rcapi = dl_X_rcapi + C*(dlj*rcapk - dlk*rcapj)
+                dl_X_rcapj = dl_X_rcapj + C*(dlk*rcapi - dli*rcapk)
+                dl_X_rcapk = dl_X_rcapk + C*(dli*rcapj - dlj*rcapi)
+
+
+            end do
+            print *, x1,y1,z1, dl_X_rcapi, dl_X_rcapj, dl_X_rcapk
+            print *, x1,minus_y1,z1, -(dl_X_rcapi), dl_X_rcapj, -(dl_X_rcapk)
+
+            write(1,*) x1,y1,z1, dl_X_rcapi, dl_X_rcapj, dl_X_rcapk
+            write(1,*) x1,minus_y1,z1, -(dl_X_rcapi), dl_X_rcapj, -(dl_X_rcapk)
+            z0=0
+            dl_X_rcapi=0
+            dl_X_rcapj=0
+            dl_X_rcapk=0
+
+        end do
+
+    end program
+
