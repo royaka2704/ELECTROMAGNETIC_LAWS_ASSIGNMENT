@@ -1,0 +1,46 @@
+program amperelaw_2d
+    implicit  none
+
+    real :: magB, icom12=0, jcom12=0,icom34=0, jcom34=0
+    real :: I=8, pi= 3.141593, mu =1 , radius= 5
+    real :: angle12=0,angle34=0, iangle12, jangle12, iangle34, jangle34
+    real :: x=0,y12=0,y34=0
+
+    ! Bxyz = mu * I/2*pi*r
+    magB = (mu * I)/(2*pi*radius)
+
+    open(1,file='amperelaw_2d.dat', status = 'replace')
+    do while(radius>=0)
+        x=-radius
+        do while(x<=radius)
+            y12=sqrt(radius**2 - x**2)
+            y34 = -y12
+
+            angle12=atan2(y12,x)
+            angle34 =atan2(y34,x)
+
+            iangle12 = pi/2 + angle12
+            jangle12 = angle12
+
+            iangle34 = pi/2 + angle34
+            jangle34 = angle34
+
+            icom12 = magB*cos(iangle12)
+            jcom12 = magB*cos(jangle12)
+
+            icom34 = magB*cos(iangle34)
+            jcom34 = magB*cos(jangle34)
+
+            print *, x,y12,icom12, jcom12, magB
+            print *, x,y34,icom34, jcom34, magB
+            write(1,*) x,y12,icom12, jcom12
+            write(1,*) x,y34,icom34, jcom34
+            x = x + 0.5
+        end do
+        radius = radius-1
+    end do
+
+
+end program
+
+
